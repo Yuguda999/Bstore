@@ -1,0 +1,5 @@
+{% include 'header.html' %}
+
+  <h1>My PDF</h1>
+  <p><a href="{% url 'download_file' pk=my_object.pk %}">{{ my_object.file.name }}</a></p>
+{% include 'footer.html' %}

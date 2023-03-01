@@ -15,7 +15,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Storek</title>
+  <title>Bstor</title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
@@ -30,7 +30,6 @@
 </head>
 <body>
 
-  <div class="hero_area">
     <!-- header section strats -->
     <header class="header_section">
       <div class="container-fluid">
@@ -54,7 +53,7 @@
                 <a class="nav-link" href="{% url 'about' %}"> About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                <a class="nav-link" href="{% url 'categories' %}">Courses</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'blog' %}"> Blog </a>
@@ -62,9 +61,18 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
               </li>
+              {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              {% endif %}
             </ul>
-            <form class="search_form">
-              <input type="text" class="form-control" placeholder="Search here...">
+            <form class="search_form" method="GET" action="{% url 'search' %}">
+              <input type="text" class="form-control" placeholder="Search here..." name="q">
               <button class="" type="submit">
                 <i class="fa fa-search" aria-hidden="true"></i>
               </button>
@@ -74,4 +82,3 @@
       </div>
     </header>
 
-    <!-- end header section -->

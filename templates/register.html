@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <title>Login 04</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <link href="{% static 'css/login_style.css' %}" rel="stylesheet" />
+    <style>
+      input {
+        display: block;
+        width: 100%;
+        height: 40px;
+        border: 1px solid #d8ddde;
+        border-outline-color: #44b89d;
+        border-radius: 3px;
+      }
+      a {
+        height: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5"></div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-12 col-lg-10">
+            <div class="wrap d-md-flex">
+              <div
+                class="img"
+                style="background-image: url({% static 'images/b1.jpg'%})"
+              ></div>
+              <div class="login-wrap p-4 p-md-5">
+                <div class="d-flex">
+                  <div class="w-100">
+                    <h3 class="mb-4">Register</h3>
+                    {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for message in messages %} {{ message }} {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="w-100">
+                    <p class="social-media d-flex justify-content-end">
+                      <a
+                        href="#"
+                        class="social-icon d-flex align-items-center justify-content-center"
+                        ><span class="fa fa-facebook"></span
+                      ></a>
+                      <a
+                        href="#"
+                        class="social-icon d-flex align-items-center justify-content-center"
+                        ><span class="fa fa-twitter"></span
+                      ></a>
+                    </p>
+                  </div>
+                </div>
+                <form
+                  action="{% url 'register' %}"
+                  class="signin-form"
+                  method="post"
+                >
+                  {% csrf_token %}
+
+                  <div class="form-group mb-3">
+                    <label for="email">Email address</label>
+                    <input
+                      type="email"
+                      class="form-control password-field"
+                      id="email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="password1">Password</label>
+                    <input
+                      type="password"
+                      class="form-control password-field"
+                      id="password-field"
+                      name="password1"
+                      required
+                    />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="password2">Confirm Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password-field"
+                      name="password2"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <button
+                      type="submit"
+                      class="form-control btn btn-primary rounded submit px-3"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                  <div class="form-group d-md-flex">
+                    <div class="w-50 text-left">
+                      <label class="checkbox-wrap checkbox-primary mb-0"
+                        >Remember Me
+                        <input type="checkbox" checked />
+                        <span class="checkmark"></span>
+                      </label>
+                    </div>
+                    <div class="w-50 text-md-right">
+                      <a href="#">Forgot Password</a>
+                    </div>
+                  </div>
+                </form>
+                <p class="text-center">
+                  Already a member? <a href="{% url 'login' %}">Login</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const togglePasswordVisibility = () => {
+        const passwordField = document.getElementByClassName("password-field");
+        const togglePassword = document.getElementById("toggle-password");
+
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          togglePassword.innerHTML =
+            '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+        } else {
+          passwordField.type = "password";
+          togglePassword.innerHTML =
+            '<i class="fa fa-eye" aria-hidden="true"></i>';
+        }
+      };
+
+      document
+        .getElementById("toggle-password")
+        .addEventListener("click", togglePasswordVisibility);
+    </script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>

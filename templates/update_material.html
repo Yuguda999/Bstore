@@ -29,7 +29,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-success">Accept</button>
-          <a href="/books/{{pk}}/delete/" class="btn btn-danger">Reject</a>
+          <a href="/materials/{{material.id}}/delete/" class="btn btn-danger">Reject</a>
     </form>
 
       </div>

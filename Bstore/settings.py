@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -123,3 +126,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+BASE_DIRT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+GOOGLE_CLIENT_SECRETS = {
+    "web": {
+        "client_id": os.getenv('CLIENT_ID'),
+        "client_secret": os.getenv('CLIENT_SECRET'),
+        "redirect_uris": ["http://localhost:8000/google-authenticate/"],
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "userinfo_uri": "https://www.googleapis.com/oauth2/v3/userinfo",
+        "scope": "openid email profile",
+    }
+}
+
+
+# Set your email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 300
+EMAIL_HOST_USER = os.getenv('EMAIL_ADD')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')

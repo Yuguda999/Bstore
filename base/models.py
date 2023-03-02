@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -24,7 +25,10 @@ class Material(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     description = models.TextField()
     updated = models.DateTimeField(auto_now=True)
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
+    reviewed = models.BooleanField(default=False)
+
 
     class Meta:
         ordering = ['-updated', '-created']

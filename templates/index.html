@@ -9,24 +9,24 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="detail-box">
-                    <h5>
-                      Storek Bookstore
+                    <h5>Bstor Bookstore
                     </h5>
                     <h1>
                       For All Your <br>
                       Study Needs
                     </h1>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste quam velit saepe dolorem deserunt quo quidem ad optio.
-                    </p>
-                    <a href="">
-                      Read More
-                    </a>
+Welcome to Bstor! We are always looking for new materials to add to our collection. If you have any documents, textbooks, or other resources that you think would be useful to students, please consider sharing them with us by adding them to our database. Together, we can build a comprehensive library of educational resources to benefit learners everywhere.                    </p>
+                    {% if request.user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'add_material' %}">Add Material</a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Add Material</a>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="img-box">
-                    <img src="{% static 'images/slider-img.png' %}" alt="">
+                    <img src="{% static 'images/slider-img1.png' %}" alt="">
                   </div>
                 </div>
               </div>
@@ -38,46 +38,20 @@
                 <div class="col-md-6">
                   <div class="detail-box">
                     <h5>
-                      Bostorek Bookstore
+                      Bstor Bookstore
                     </h5>
                     <h1>
                       For All Your <br>
                       Reading Needs
                     </h1>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste quam velit saepe dolorem deserunt quo quidem ad optio.
-                    </p>
-                    <a href="">
-                      Read More
-                    </a>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="img-box">
-                    <img src="{% static 'images/slider-img.png' %}" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <div class="container ">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="detail-box">
-                    <h5>
-                      Bostorek Bookstore
-                    </h5>
-                    <h1>
-                      For All Your <br>
-                      Reading Needs
-                    </h1>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste quam velit saepe dolorem deserunt quo quidem ad optio.
-                    </p>
-                    <a href="">
-                      Read More
-                    </a>
+ We encourage you to contribute to this community-driven project by adding materials that you think could be useful to others. Simply click on the "Add Material" button and fill out the form with the necessary information. Thank you for your contributions!                    </p>
+                    {% if request.user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'add_material' %}">Add Material</a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Add Material</a>
+                    {% endif %}
+
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -89,7 +63,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
     <!-- end slider section -->
@@ -115,7 +88,7 @@
               </div>
               <div class="detail-box">
                 <h5>
-                  <a href="{% url 'course_detail' course_id=course.pk %}">{{ course.name }}</a>
+                  <a href="{% url 'course_detail' course_id=course.pk %}">{{ course.name.title }}</a>
                 </h5>
               </div>
             </div>
@@ -124,6 +97,8 @@
           {% endif %}
 
         </div>
+      </div>
+    </div>
   </section>
 
 
@@ -145,9 +120,10 @@
               </h2>
             </div>
             <p>
-              At cumque tenetur iste molestiae, vel eum reiciendis assumenda! Numquam, repudiandae. Consequuntur obcaecati recusandae aliquam, amet doloribus eius dolores officiis cumque? Quibusdam praesentium pariatur sapiente mollitia, amet hic iusto voluptas! Iusto quo earum vitae excepturi, ipsam aliquid deleniti assumenda culpa deserunt.
+Bstor is dedicated to providing high-quality educational materials to students and educators alike. We believe that education is the key to unlocking opportunities and improving lives, and we are passionate about making educational resources accessible to everyone.
+
             </p>
-            <a href="">
+            <a href="{% url 'about' %}">
               Read More
             </a>
           </div>

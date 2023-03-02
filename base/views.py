@@ -1,14 +1,24 @@
 import os
+import smtplib
 
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.db.models import Q
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
+from django.urls import reverse
+
+from Bstore import settings
 from .models import Course, Topic, Material
 from .forms import MaterialForm, MaterialUpdateForm, UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from google.oauth2 import id_token
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import Flow
 
 
 # Create your views here.
@@ -59,6 +69,16 @@ def blog(request):
 
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        number = request.POST.get('number', '')
+        body = request.POST.get('message', '')
+
+        send_email(name, email, number, body)
+
+        return render(request, 'success.html')
+
     return render(request, 'contact.html')
 
 
@@ -74,6 +94,7 @@ def course_detail(request, course_id):
     return render(request, 'course_detail.html', context)
 
 
+@login_required(login_url='login')
 def add_material(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST, request.FILES)
@@ -82,6 +103,7 @@ def add_material(request):
             file = form.cleaned_data['file']
             course = form.cleaned_data['course']
             topic = form.cleaned_data['topic']
+            description = form.cleaned_data['description']
             new_topic_name = form.cleaned_data['new_topic_name']
             new_course_name = form.cleaned_data['new_course_name']
 
@@ -100,8 +122,11 @@ def add_material(request):
             if existing_material:
                 return redirect('home')
 
+            # Save the user
+
             # Save the new material
-            material = Material(name=name, file=file, course=course, topic=topic)
+            material = Material(name=name, file=file, course=course, topic=topic, description=description,
+                                uploaded_by=request.user)
             material.save()
 
             return redirect('home')
@@ -112,7 +137,10 @@ def add_material(request):
     return render(request, 'add_material.html', context)
 
 
+@user_passes_test(lambda u: u.is_staff)
+@staff_member_required
 def update_material(request, pk):
+    is_admin = request.user.is_staff
     material = get_object_or_404(Material, id=pk)
     form = MaterialUpdateForm(request.POST or None, request.FILES or None, instance=material)
 
@@ -120,8 +148,9 @@ def update_material(request, pk):
         material = form.save(commit=False)
         material.topic = form.cleaned_data['topic']
         material.course = form.cleaned_data['course']
+        material.description = form.cleaned_data['description']
         material.save()
-        return redirect('course_detail', course_id=material.course.pk)
+        return redirect('pending_materials')
 
     context = {
         'form': form,
@@ -131,6 +160,13 @@ def update_material(request, pk):
     return render(request, 'update_material.html', context)
 
 
+@staff_member_required
+def pending_materials(request):
+    materials = Material.objects.filter(reviewed=False)
+    return render(request, 'pending_materials.html', {'materials': materials})
+
+
+@staff_member_required
 def delete_material(request, pk):
     material = get_object_or_404(Material, id=pk)
     material.delete()
@@ -176,3 +212,44 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('home')
+
+
+def google_login(request):
+    flow = Flow.from_client_config(
+        settings.GOOGLE_CLIENT_SECRETS,
+        scopes=['openid', 'email', 'profile'],
+        redirect_uri=request.build_absolute_uri(reverse('google-authenticate'))
+    )
+    authorization_url, state = flow.authorization_url(prompt='select_account')
+    request.session['oauth_state'] = state
+    return redirect(authorization_url)
+
+
+def google_authenticate(request):
+    state = request.session.pop('oauth_state', '')
+    flow = Flow.from_client_config(
+        settings.GOOGLE_CLIENT_SECRETS,
+        scopes=['openid', 'email', 'profile'],
+        state=state,
+        redirect_uri=request.build_absolute_uri(reverse('google-authenticate'))
+    )
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    id_token_info = id_token.verify_oauth2_token(
+        flow.credentials.id_token, Request(), settings.GOOGLE_CLIENT_ID)
+    email = id_token_info['email']
+    user = authenticate(request, email=email)
+    if user is not None:
+        login(request, user)
+        return redirect('home')
+    else:
+        return HttpResponseBadRequest('Invalid user')
+
+
+def send_email(name, email, phone, message):
+    OWN_EMAIL = os.getenv('EMAIL_ADD')
+    OWN_PASSWORD = os.getenv('EMAIL_PASS')
+    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\n\nMessage:{message}"
+    with smtplib.SMTP_SSL("smtp.gmail.com") as connection:
+        # connection.starttls()
+        connection.login(OWN_EMAIL, OWN_PASSWORD)
+        connection.sendmail('Bstore', OWN_EMAIL, email_message)

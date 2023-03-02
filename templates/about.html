@@ -19,11 +19,23 @@
               </h2>
             </div>
             <p>
-              At cumque tenetur iste molestiae, vel eum reiciendis assumenda! Numquam, repudiandae. Consequuntur obcaecati recusandae aliquam, amet doloribus eius dolores officiis cumque? Quibusdam praesentium pariatur sapiente mollitia, amet hic iusto voluptas! Iusto quo earum vitae excepturi, ipsam aliquid deleniti assumenda culpa deserunt.
+              Bstor is dedicated to providing high-quality educational materials to students and educators alike. We believe that education is the key to unlocking opportunities and improving lives, and we are passionate about making educational resources accessible to everyone.
+
+Our team works tirelessly to curate and review the materials that are available on our platform, ensuring that they are accurate, up-to-date, and relevant. We are committed to providing the best possible experience for our users, and we welcome your feedback and suggestions.
+
+Thank you for visiting our website, and we hope that you find the resources that you need to achieve your educational goals.
+
+
             </p>
-            <a href="">
-              Read More
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'add_material' %}">
+              Contribute
             </a>
+            {% else %}
+            <a href="{% url 'login' %}">
+              Contribute
+            </a>
+            {% endif %}
           </div>
         </div>
       </div>

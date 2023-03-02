@@ -39,6 +39,7 @@ class MaterialForm(forms.Form):
         name = self.cleaned_data['name']
         file = self.cleaned_data['file']
         topic = self.cleaned_data['topic']
+        description = self.cleaned_data['description']
         new_topic_name = self.cleaned_data['new_topic_name']
         course = self.cleaned_data['course']
         new_course_name = self.cleaned_data['new_course_name']
@@ -57,7 +58,7 @@ class MaterialForm(forms.Form):
                 raise forms.ValidationError('Either select a course or enter a new course name.')
 
         # Create a new Material object with the provided information
-        material = Material.objects.create(name=name, file=file, course=course, topic=topic)
+        material = Material.objects.create(name=name, file=file, course=course, topic=topic, description=description)
         return material
 
 

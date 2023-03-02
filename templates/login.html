@@ -65,10 +65,11 @@
                         class="social-icon d-flex align-items-center justify-content-center"
                         ><span class="fa fa-facebook"></span
                       ></a>
+                      {% url 'google-login' as google_login_url %}
                       <a
-                        href="#"
+                        href="{{ google_login_url }}?next={{ request.GET.next }}"
                         class="social-icon d-flex align-items-center justify-content-center"
-                        ><span class="fa fa-twitter"></span
+                        ><span class="fa fa-google"></span
                       ></a>
                     </p>
                   </div>

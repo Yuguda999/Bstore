@@ -114,12 +114,18 @@ def add_material(request):
 
             # Create new course if new_course_name is provided
             if new_course_name:
-                course = Course(name=new_course_name)
-                course.save()
+                existing_course = Course.objects.filter(name=new_course_name).exists()
+                if existing_course:
+                    messages.error(request, f"This course, {new_course_name} exists already select from the dropdown list")
+                    return redirect('home')
+                else:
+                    course = Course(name=new_course_name)
+                    course.save()
 
             # Check for existing materials with the same name and course/topic combination
-            existing_material = Material.objects.filter(name=name, course=course, topic=topic).exists()
+            existing_material = Material.objects.filter(name=name).exists()
             if existing_material:
+                messages.error(request, f"The material, {existing_material} or course exists already")
                 return redirect('home')
 
             # Save the user
@@ -128,7 +134,7 @@ def add_material(request):
             material = Material(name=name, file=file, course=course, topic=topic, description=description,
                                 uploaded_by=request.user)
             material.save()
-
+            messages.success(request, "Thank you for your contribution, the material is now under review")
             return redirect('home')
     else:
         form = MaterialForm()

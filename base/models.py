@@ -1,9 +1,11 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
 
 class Course(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -11,6 +13,7 @@ class Course(models.Model):
 
 
 class Topic(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -19,6 +22,7 @@ class Topic(models.Model):
 
 
 class Material(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='materials/')
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -28,7 +32,6 @@ class Material(models.Model):
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     reviewed = models.BooleanField(default=False)
-
 
     class Meta:
         ordering = ['-updated', '-created']

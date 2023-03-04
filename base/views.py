@@ -84,7 +84,7 @@ def contact(request):
 
 def course_detail(request, course_id):
     try:
-        course = Course.objects.get(pk=course_id)
+        course = Course.objects.get(id=course_id)
     except Course.DoesNotExist:
         raise Http404("Course does not exist")
 
@@ -123,7 +123,7 @@ def add_material(request):
                     course.save()
 
             # Check for existing materials with the same name and course/topic combination
-            existing_material = Material.objects.filter(name=name).exists()
+            existing_material = Material.objects.filter(name=name, topic=topic, course=course).exists()
             if existing_material:
                 messages.error(request, f"The material, {existing_material} or course exists already")
                 return redirect('home')
@@ -208,7 +208,7 @@ def register_view(request):
         user = User.objects.create_user(email, email, password1)
         user.save()
         login(request, user)
-        messages.success(request, "You are now registered and can log in")
+        messages.success(request, "You are now registered and logged in")
         return redirect('home')
     else:
         return render(request, 'register.html')
@@ -259,3 +259,7 @@ def send_email(name, email, phone, message):
         # connection.starttls()
         connection.login(OWN_EMAIL, OWN_PASSWORD)
         connection.sendmail('Bstore', OWN_EMAIL, email_message)
+
+
+def api_doc(request):
+    return render(request, 'api_doc.html')

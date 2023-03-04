@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>API Documentation</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        /* Styles for the header section */
+header {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 40px;
+  background-color: #f2f2f2;
+	padding: 10px;
+	box-shadow: 0 2px
+}
+body {
+	font-family: Arial, sans-serif;
+}
+
+/* Styles for the main section */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Styles for the section headings */
+h2 {
+  color: #3f51b5;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* Styles for the code blocks */
+code {
+  background-color: #f5f5f5;
+  padding: 5px;
+  font-size: 14px;
+  font-family: Consolas, monospace;
+}
+
+/* Styles for the links */
+a {
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+	<header>
+		<h1>API Documentation</h1>
+		<nav>
+			<ul>
+				<li><a href="#courses">Courses</a></li>
+				<li><a href="#topics">Topics</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<section id="courses">
+			<h2>Courses</h2>
+			<p>Below are the available endpoints for courses:</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Endpoint</th>
+						<th>Method</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>/api/courses</td>
+						<td>GET</td>
+						<td>Get all courses</td>
+					</tr>
+					<tr>
+						<td>/api/courses/{id}</td>
+						<td>GET</td>
+						<td>Get a course by ID</td>
+					</tr>
+					<tr>
+						<td>/api/courses</td>
+						<td>POST</td>
+						<td>Create a new course</td>
+					</tr>
+					<tr>
+						<td>/api/courses/{id}</td>
+						<td>PUT</td>
+						<td>Update an existing course</td>
+					</tr>
+					<tr>
+						<td>/api/courses/{id}</td>
+						<td>DELETE</td>
+						<td>Delete a course by ID</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section id="topics">
+			<h2>Topics</h2>
+			<p>Below are the available endpoints for topics:</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Endpoint</th>
+						<th>Method</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>/api/topics</td>
+						<td>GET</td>
+						<td>Get all topics</td>
+					</tr>
+					<tr>
+						<td>/api/topics/{id}</td>
+						<td>GET</td>
+						<td>Get a topic by ID</td>
+					</tr>
+					<tr>
+						<td>/api/topics</td>
+						<td>POST</td>
+						<td>Create a new topic</td>
+					</tr>
+					<tr>
+						<td>/api/topics/{id}</td>
+						<td>PUT</td>
+						<td>Update an existing topic</td>
+					</tr>
+					<tr>
+						<td>/api/topics/{id}</td>
+						<td>DELETE</td>
+						<td>Delete a topic by ID</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</main>
+</body>
+</html>

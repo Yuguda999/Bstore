@@ -252,8 +252,8 @@ def google_authenticate(request):
 
 
 def send_email(name, email, phone, message):
-    OWN_EMAIL = os.getenv('EMAIL_ADD')
-    OWN_PASSWORD = os.getenv('EMAIL_PASS')
+    OWN_EMAIL = os.environ.get('EMAIL_ADD')
+    OWN_PASSWORD = os.environ.get('EMAIL_PASS')
     email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\n\nMessage:{message}"
     with smtplib.SMTP_SSL("smtp.gmail.com") as connection:
         # connection.starttls()

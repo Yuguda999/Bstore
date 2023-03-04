@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from datetime import timedelta
 import dj_database_url
-from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = []
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
 # Application definition
 
@@ -138,8 +136,8 @@ BASE_DIRT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 GOOGLE_CLIENT_SECRETS = {
     "web": {
-        "client_id": os.getenv('CLIENT_ID'),
-        "client_secret": os.getenv('CLIENT_SECRET'),
+        "client_id": os.environ.get('CLIENT_ID'),
+        "client_secret": os.environ.get('CLIENT_SECRET'),
         "redirect_uris": ["http://localhost:8000/google-authenticate/"],
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://accounts.google.com/o/oauth2/token",
@@ -153,8 +151,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 300
-EMAIL_HOST_USER = os.getenv('EMAIL_ADD')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
+EMAIL_HOST_USER = os.environ.get('EMAIL_ADD')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

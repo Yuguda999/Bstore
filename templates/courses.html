@@ -20,7 +20,7 @@
               </div>
               <div class="detail-box">
                 <h5>
-                  <a href="courses/{{course.id}}/">{{ course.name.title }}</a>
+                  <a href="{% url 'course_detail' course_id=course.id %}">{{ course.name.title }}</a>
                 </h5>
               </div>
             </div>

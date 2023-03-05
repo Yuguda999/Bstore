@@ -136,7 +136,7 @@ GOOGLE_CLIENT_SECRETS = {
     "web": {
         "client_id": os.environ.get('CLIENT_ID'),
         "client_secret": os.environ.get('CLIENT_SECRET'),
-        "redirect_uris": ["http://localhost:8000/google-authenticate/"],
+        "redirect_uris": ["https://bstor.onrender.com/google-authenticate/"],
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://accounts.google.com/o/oauth2/token",
         "userinfo_uri": "https://www.googleapis.com/oauth2/v3/userinfo",

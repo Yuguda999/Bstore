@@ -24,7 +24,7 @@ class Topic(models.Model):
 class Material(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-    file = models.FileField(upload_to='materials/')
+    file = models.FileField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     description = models.TextField()

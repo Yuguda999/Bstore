@@ -16,9 +16,6 @@ from .models import Course, Topic, Material
 from .forms import MaterialForm, MaterialUpdateForm, UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from google.oauth2 import id_token
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import Flow
 
 
 # Create your views here.
@@ -218,37 +215,6 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('home')
-
-
-def google_login(request):
-    flow = Flow.from_client_config(
-        settings.GOOGLE_CLIENT_SECRETS,
-        scopes=['openid', 'email', 'profile'],
-        redirect_uri=request.build_absolute_uri(reverse('google-authenticate'))
-    )
-    authorization_url, state = flow.authorization_url(prompt='select_account')
-    request.session['oauth_state'] = state
-    return redirect(authorization_url)
-
-
-def google_authenticate(request):
-    state = request.session.pop('oauth_state', '')
-    flow = Flow.from_client_config(
-        settings.GOOGLE_CLIENT_SECRETS,
-        scopes=['openid', 'email', 'profile'],
-        state=state,
-        redirect_uri=request.build_absolute_uri(reverse('google-authenticate'))
-    )
-    flow.fetch_token(authorization_response=request.build_absolute_uri())
-    id_token_info = id_token.verify_oauth2_token(
-        flow.credentials.id_token, Request(), settings.GOOGLE_CLIENT_ID)
-    email = id_token_info['email']
-    user = authenticate(request, email=email)
-    if user is not None:
-        login(request, user)
-        return redirect('home')
-    else:
-        return HttpResponseBadRequest('Invalid user')
 
 
 def send_email(name, email, phone, message):

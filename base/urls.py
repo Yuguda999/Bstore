@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -17,8 +19,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
-    path('google-login/', views.google_login, name='google-login'),
-    path('google-authenticate/', views.google_authenticate, name='google-authenticate'),
     path('api-doc/', views.api_doc, name='api_doc'),
 
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

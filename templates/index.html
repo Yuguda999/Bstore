@@ -1,11 +1,6 @@
 {% include 'header.html' %}
 {% load static %}
 
-{% if messages %}
-<div class="alert alert-danger" role="alert">
-  {% for message in messages %} {{ message }} {% endfor %}
-</div>
-{% endif %}
 
     <!-- slider section -->
     <section class="slider_section ">
@@ -147,7 +142,7 @@ Bstor is dedicated to providing high-quality educational materials to students a
     <div class="container ">
       <div class="heading_container heading_center">
         <h2>
-          What Says Customers
+          What Says Users
         </h2>
         <hr>
       </div>
@@ -306,18 +301,19 @@ Bstor is dedicated to providing high-quality educational materials to students a
               Contact Us
             </h2>
           </div>
-          <form action="#">
+          <form action="" method="post">
+            {% csrf_token %}
             <div>
-              <input type="text" placeholder="Name" />
+              <input type="text" placeholder="Name" name="name"/>
             </div>
             <div>
-              <input type="email" placeholder="Email" />
+              <input type="email" placeholder="Email" name="email"/>
             </div>
             <div>
-              <input type="text" placeholder="Pone Number" />
+              <input type="text" placeholder="Pone Number" name="number"/>
             </div>
             <div>
-              <input type="text" class="message-box" placeholder="Message" />
+              <input type="text" class="message-box" placeholder="Message" name="message"/>
             </div>
             <div class="btn-box">
               <button>

@@ -51,12 +51,12 @@
                 <div class="d-flex">
                   <div class="w-100">
                     <h3 class="mb-4">Register</h3>
-                    {% if messages %}
+                  </div>
+                  {% if messages %}
                     <div class="alert alert-danger" role="alert">
                       {% for message in messages %} {{ message }} {% endfor %}
                     </div>
                     {% endif %}
-                  </div>
                   <div class="w-100">
                     <p class="social-media d-flex justify-content-end">
                       <a
@@ -78,7 +78,16 @@
                   method="post"
                 >
                   {% csrf_token %}
-
+                  <div class="form-group mb-3">
+                    <label for="username">Username</label>
+                    <input
+                      type="text"
+                      class="form-control password-field"
+                      id="email"
+                      name="username"
+                      required
+                    />
+                  </div>
                   <div class="form-group mb-3">
                     <label for="email">Email address</label>
                     <input

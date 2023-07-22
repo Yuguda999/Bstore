@@ -1,4 +1,5 @@
 {% include 'header.html' %}
+{% load static %}
 <style>
     .inner-box{
       box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
@@ -16,9 +17,16 @@
         max-width: 100%;
       }
     }
+    #save1{
+    background: transparent;
+    height: 5vh;
+    width: fit-content;
+    position: absolute;
+    z-index: 100000;
+    display: none;
+}
+
   </style>
-
-
   <div class="container bg">
     <div class="row justify-content-center">
       <div class="col-lg-6 inner-box">
@@ -27,9 +35,13 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class= "btn-primary">Save</button>
+          <div>
+              <img src="{% static 'images/preloader1.gif' %}" id="save1">
+          </div>
 </form>
 
       </div>
     </div>
   </div>
+
 {% include 'footer.html' %}

@@ -90,3 +90,10 @@
       </div>
     </header>
 
+      {% if messages %}
+        <div class="alert alert-info" role="alert" id="message-popup">
+          {% for message in messages %} {{ message }} {% endfor %}
+        </div>
+      {% endif %}
+
+

@@ -28,6 +28,8 @@
         <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+          <a href="{% url 'download_file' pk=material.pk %}" class="btn btn-primary">View Material</a>
+
     <button type="submit" class="btn btn-success">Accept</button>
           <a href="/materials/{{material.id}}/delete/" class="btn btn-danger">Reject</a>
     </form>

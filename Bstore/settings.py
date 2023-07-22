@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -143,8 +145,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 300
-EMAIL_HOST_USER = os.environ.get('EMAIL_ADD')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_HOST_USER = os.getenv('EMAIL_ADD')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -168,3 +170,11 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+
+GOOGLE_DRIVE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'bstordrive.json')
+
+GOOGLE_DRIVE_STORAGE_ROOT = '1ZfTSOZBQrNGOdabSxz1-isr0o6kPlbt3'  # Specify the root folder on Google Drive where you want to store files
+
+GOOGLE_DRIVE_AUTH_SCOPES = ['https://www.googleapis.com/auth/drive']
+
+GOOGLE_DRIVE_STORAGE_MEDIA_URL = '/media/'

@@ -1,24 +1,99 @@
 import os
-import smtplib
+from io import BytesIO
 
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.db.models import Q
-from django.http import HttpResponse, FileResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect, get_object_or_404
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
+from dotenv import load_dotenv
 from django.http import Http404
-from django.urls import reverse
 
 from Bstore import settings
 from .models import Course, Topic, Material
-from .forms import MaterialForm, MaterialUpdateForm, UserRegistrationForm, UserLoginForm
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from .forms import MaterialForm, MaterialUpdateForm
+from base.email import send_email, email_new_user
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the base directory of the project
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Initialize Google Drive API credentials from the credentials file
+credentials = service_account.Credentials.from_service_account_file(
+    settings.GOOGLE_DRIVE_CREDENTIALS_FILE,
+    scopes=['https://www.googleapis.com/auth/drive']
+)
 
 
-# Create your views here.
+# ---------------------- Views ----------------------
+
+# Home view
+def home(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        number = request.POST.get('number', '')
+        body = request.POST.get('message', '')
+        send_email(name, email, number, body)
+        messages.success(request, "Message Sent Successfully")
+        return redirect('home')
+
+    courses = Course.objects.all()
+    context = {'courses': courses}
+    return render(request, 'index.html', context)
+
+
+# About view
+def about(request):
+    return render(request, 'about.html')
+
+
+# Categories view
+def categories(request):
+    courses = Course.objects.all()
+    context = {'courses': courses}
+    return render(request, 'courses.html', context)
+
+
+# Blog view
+def blog(request):
+    return render(request, 'blog.html')
+
+
+# Contact view
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        number = request.POST.get('number', '')
+        body = request.POST.get('message', '')
+        send_email(name, email, number, body)
+        messages.success(request, "Message Sent Successfully")
+        return redirect('home')
+
+    return render(request, 'contact.html')
+
+
+# Course detail view
+def course_detail(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+    except Course.DoesNotExist:
+        raise Http404("Course does not exist")
+
+    topics = Topic.objects.filter(course=course)
+    materials = Material.objects.filter(course=course)
+    context = {'course': course, 'topics': topics, 'materials': materials}
+    return render(request, 'course_detail.html', context)
+
+
+# Search view
 def search(request):
     query = request.GET.get('q')
     print(query)
@@ -37,102 +112,49 @@ def search(request):
     return render(request, 'search.html', context)
 
 
+# Download file view
+@login_required(login_url='login')
 def download_file(request, pk):
-    my_object = get_object_or_404(Material, pk=pk)
-    file_path = my_object.file.path
-    file_name = os.path.basename(file_path)
-    response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=file_name)
-    return response
-
-
-def home(request):
-    courses = Course.objects.all()
-    context = {'courses': courses}
-    return render(request, 'index.html', context)
-
-
-def about(request):
-    return render(request, 'about.html')
-
-
-def categories(request):
-    courses = Course.objects.all()
-    context = {'courses': courses}
-    return render(request, 'courses.html', context)
-
-
-def blog(request):
-    return render(request, 'blog.html')
-
-
-def contact(request):
-    if request.method == 'POST':
-        name = request.POST.get('name', '')
-        email = request.POST.get('email', '')
-        number = request.POST.get('number', '')
-        body = request.POST.get('message', '')
-
-        send_email(name, email, number, body)
-
-        return render(request, 'success.html')
-
-    return render(request, 'contact.html')
-
-
-def course_detail(request, course_id):
     try:
-        course = Course.objects.get(id=course_id)
-    except Course.DoesNotExist:
-        raise Http404("Course does not exist")
+        file_instance = Material.objects.get(id=pk)
+        drive_service = build('drive', 'v3', credentials=credentials)
 
-    topics = Topic.objects.filter(course=course)
-    materials = Material.objects.filter(course=course)
-    context = {'course': course, 'topics': topics, 'materials': materials}
-    return render(request, 'course_detail.html', context)
+        file_metadata = drive_service.files().get(fileId=file_instance.drive_id).execute()
+        file_name = file_metadata['name']
+        file_mime_type = file_metadata['mimeType']
+        file_bytes = drive_service.files().get_media(fileId=file_instance.drive_id).execute()
+
+        # Create an in-memory file-like object
+        file_object = BytesIO(file_bytes)
+
+        response = HttpResponse(content_type=file_mime_type)
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        response.write(file_object.getvalue())
+
+        return response
+    except Material.DoesNotExist:
+        raise Http404("File not found")
+    except Exception as e:
+        return HttpResponse(f"Error occurred while downloading the file: {e}", status=500)
 
 
+# Add material view
 @login_required(login_url='login')
 def add_material(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST, request.FILES)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            file = form.cleaned_data['file']
-            course = form.cleaned_data['course']
-            topic = form.cleaned_data['topic']
-            description = form.cleaned_data['description']
-            new_topic_name = form.cleaned_data['new_topic_name']
-            new_course_name = form.cleaned_data['new_course_name']
+            # ... Code for material creation ...
 
-            # Create new topic if new_topic_name is provided
-            if new_topic_name:
-                topic = Topic(name=new_topic_name, course=course)
-                topic.save()
-
-            # Create new course if new_course_name is provided
-            if new_course_name:
-                existing_course = Course.objects.filter(name=new_course_name).exists()
-                if existing_course:
-                    messages.error(request, f"This course, {new_course_name} exists already select from the dropdown list")
-                    return redirect('home')
-                else:
-                    course = Course(name=new_course_name)
-                    course.save()
-
-            # Check for existing materials with the same name and course/topic combination
-            existing_material = Material.objects.filter(name=name, topic=topic, course=course).exists()
-            if existing_material:
-                messages.error(request, f"The material, {existing_material} or course exists already")
+            try:
+                # Save the new material
+                material_instance = Material.objects.create(name=name, drive_id=created_file['id'], course=course, topic=topic,
+                                                            description=description, uploaded_by=request.user)
+                messages.success(request, "Thank you for your contribution, the material is now under review")
                 return redirect('home')
+            except Exception as e:
+                return HttpResponse(f"Error occurred while adding the material: {e}", status=500)
 
-            # Save the user
-
-            # Save the new material
-            material = Material(name=name, file=file, course=course, topic=topic, description=description,
-                                uploaded_by=request.user)
-            material.save()
-            messages.success(request, "Thank you for your contribution, the material is now under review")
-            return redirect('home')
     else:
         form = MaterialForm()
 
@@ -140,11 +162,15 @@ def add_material(request):
     return render(request, 'add_material.html', context)
 
 
+# Course update view
 @user_passes_test(lambda u: u.is_staff)
 @staff_member_required
 def update_material(request, pk):
-    is_admin = request.user.is_staff
-    material = get_object_or_404(Material, id=pk)
+    try:
+        material = Material.objects.get(id=pk)
+    except Material.DoesNotExist:
+        raise Http404("Material does not exist")
+
     form = MaterialUpdateForm(request.POST or None, request.FILES or None, instance=material)
 
     if form.is_valid():
@@ -163,37 +189,53 @@ def update_material(request, pk):
     return render(request, 'update_material.html', context)
 
 
+# Pending materials view
 @staff_member_required
 def pending_materials(request):
     materials = Material.objects.filter(reviewed=False)
     return render(request, 'pending_materials.html', {'materials': materials})
 
 
+# Delete material view
 @staff_member_required
 def delete_material(request, pk):
-    material = get_object_or_404(Material, id=pk)
-    material.delete()
-    return redirect('home')
+    try:
+        file_instance = Material.objects.get(id=pk)
+        drive_service = build('drive', 'v3', credentials=credentials)
+
+        drive_service.files().delete(fileId=file_instance.drive_id).execute()
+
+        material = get_object_or_404(Material, id=pk)
+        material.delete()
+        # Handle the response or redirect to the appropriate page
+        return redirect('home')
+    except Material.DoesNotExist:
+        raise Http404("Material not found")
 
 
+# ---------------------- Authentication Views ----------------------
+
+# Login view
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, "Invalid email or password")
+            messages.error(request, "Invalid username or password")
             return redirect('login')
     else:
         return render(request, 'login.html')
 
 
+# Register view
 def register_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+        username = request.POST.get('username')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         if password1 != password2:
@@ -202,7 +244,14 @@ def register_view(request):
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email is already taken")
             return redirect('register')
-        user = User.objects.create_user(email, email, password1)
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username is already taken")
+            return redirect('register')
+
+        # send welcome message to new user
+        email_new_user(username=username, email=email)
+
+        user = User.objects.create_user(username, email, password1)
         user.save()
         login(request, user)
         messages.success(request, "You are now registered and logged in")
@@ -211,21 +260,27 @@ def register_view(request):
         return render(request, 'register.html')
 
 
+# Logout view
 def logout_view(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('home')
 
 
-def send_email(name, email, phone, message):
-    OWN_EMAIL = os.environ.get('EMAIL_ADD')
-    OWN_PASSWORD = os.environ.get('EMAIL_PASS')
-    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\n\nMessage:{message}"
-    with smtplib.SMTP_SSL("smtp.gmail.com") as connection:
-        # connection.starttls()
-        connection.login(OWN_EMAIL, OWN_PASSWORD)
-        connection.sendmail('Bstore', OWN_EMAIL, email_message)
+# ---------------------- Miscellaneous Views ----------------------
 
-
+# API Documentation view
 def api_doc(request):
     return render(request, 'api_doc.html')
+
+
+# ---------------------- Error Handlers ----------------------
+
+# 404 Page Not Found handler
+def page_not_found(request, exception):
+    return render(request, '404.html', status=404)
+
+
+# 500 Server Error handler
+def server_error(request):
+    return render(request, '500.html', status=500)

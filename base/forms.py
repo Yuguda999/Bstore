@@ -65,7 +65,7 @@ class MaterialForm(forms.Form):
 class MaterialUpdateForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = '__all__'
+        exclude = ['file', 'drive_id']
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)

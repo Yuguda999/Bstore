@@ -795,3 +795,11 @@ a:focus {
   color: inherit;
 }
 /*# sourceMappingURL=style.css.map */
+#message-popup{
+    width: fit-content;
+    padding: 20px;
+    margin: 10px 25vw 0;
+    position: absolute;
+    z-index: 1000000000000000;
+
+}

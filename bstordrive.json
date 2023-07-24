@@ -1,13 +1,3 @@
 {
-  "type": "service_account",
-  "project_id": "bstorbooks",
-  "private_key_id": "e8e42373fadfd59e00842c1e4a982618593090e7",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDDWjRGbTL097UH\nJy3eLinsFi1G5Lgj0bGcSoNBP+xLtUbpv8XWrReRHexDBWhysXM9uuBcVbheM62H\n2DCA7NSABFxRJ56LO6TmOUrtkYbHgLJp/dAigAddLtIephQrn0vXPGv9OurPvpPS\nQiclHxu6Q4jmyJCN0mA4ccOFjvNo+xt3x3ceBphlk0XNkHkMI47qTmyf4Bwr4f/V\nRoFHRzNpZDFeFOALSL+N/2IFr7MRv3rKQApwric0odFh9vP/dA7CJDVX1+vwKzaM\n2dTmabAUwouI/nlbj9alq+Is6q1BKi8jUG9ZePIVZF+A/sKgx+mIpj2OGFaLtkqy\n1Ki0c1RJAgMBAAECggEABQYM0hgnd0/nbTJUu6H0R131TB1q9CuFpb9Ey34ZVYO+\njxmfZ3s2tUSlDr7U23OKGHb1zhS7k7CV2yh0Ftyq75/Xv+kvlTpeGI2LSmYI++29\n/iZzc8UBwM5eGOusbnK/ld636DXbqVFSpoA3rCdgpH7tcQHiCxjzNdW3HCLQ9Pd0\np5UeL5WbBmWwru/451D5SmcBq4dEzDcRLAVSO0XAXmFleYL6D1njdAsA3OmuW4ef\n+OLJU7+pwv+d5U0z9pTHx9Ytgs0v7PNOSLF1SILB6a46LUm8YejoMNP8OyHgZiqq\nAqHjhr5aONfdtJTxTZZu/AGg7Rsu0hUVhoudDyAZAQKBgQDf5rP+9rcPtu1N09RU\n7b05WKD8/uDccVwZcwWY/nvCcGyEI9wgqQC91FyHkcvGVGR/Wfuhz2srTDnrhjRG\nWvrECgkCoTB3gcZzqT2TfjvRmjrVzvARAXKbpXVhOgSnrEBs8p4nX9l1pqmKHPhN\n9KEtGHWiCDG5AG19d+AdKEL/bwKBgQDfW75XCMKUoZPhZjE6gVrmeVQbzQGhOYfq\nxoh2xsWfVQ3GTgBObDaRbodfuzM5uGVjDqIMF8t2pI0HIvxpBFxgS9wBjVU3wIkh\neLZ8pvUydnVNF2/GLZBavL4916RFK4lTnRDwylmrIxIkgzfKKVsa2jksulcIFgh0\nx76HfGsLxwKBgG17c9xia1Ulz5fU0ujMb1CRQ/cx8mYYkD5pff03wvBq5MUge80E\nlrY8Fxq7cfcC4TlcmKygrfi4B0Jhl0InzqL5fTpp8zccoBuCT/fFLB7r2YUe8Uh/\nerkdCO6H3irXEZG0eR0rwzvCSPid/dSwn/dbFHoso5Og3+kQKuhW/ZvFAoGANtR2\nrTbhTUs82iAUBaCrh9hQ5WI1/DX7P47tAPtal/pxHzUWrimyW5EeekmiEZFKkj6N\nWRqeP8m1NQNJox4G7zywDVF8kesZvrW7Vm5F0tVxhjMypRuaTCv5J4VANhqx42yz\nM+j4iiJZ2cy8bUwpqTXYwzobE0kVWlWOWAQa4xECgYAoEo8k443SmVP/HWq1cmHS\nwe160UkcwNo6f7K1Bm0wqBLmY53Xpq391VSkMFSKw0ShlSvS0So/YHCN7MQjhHAU\njk0IH5HYx4/UFnTw5vRW9k+9sGxPX9mOEmUnN1dKA0rrVsPRuRBImzekzpQbZdyu\nFP96OYwTvYxBWVSwNff9Eg==\n-----END PRIVATE KEY-----\n",
-  "client_email": "bstor-618@bstorbooks.iam.gserviceaccount.com",
-  "client_id": "101127104042157318523",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bstor-618%40bstorbooks.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+  
 }

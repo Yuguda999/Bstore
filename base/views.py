@@ -12,6 +12,7 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from dotenv import load_dotenv
 from django.http import Http404
+from googleapiclient.http import MediaInMemoryUpload
 
 from Bstore import settings
 from .models import Course, Topic, Material
@@ -145,7 +146,50 @@ def add_material(request):
         form = MaterialForm(request.POST, request.FILES)
         if form.is_valid():
             # ... Code for material creation ...
+            name = form.cleaned_data['name']
+            file = form.cleaned_data['file']
+            course = form.cleaned_data['course']
+            topic = form.cleaned_data['topic']
+            description = form.cleaned_data['description']
+            new_topic_name = form.cleaned_data['new_topic_name']
+            new_course_name = form.cleaned_data['new_course_name']
 
+            drive_service = build('drive', 'v3', credentials=credentials)
+
+            file_metadata = {
+                'name': file.name,
+                'parents': [settings.GOOGLE_DRIVE_STORAGE_ROOT]  # Set the parent folder ID
+            }
+
+            media = MediaInMemoryUpload(file.read(), mimetype=file.content_type)
+            created_file = drive_service.files().create(
+                body=file_metadata,
+                media_body=media,
+                fields='id'
+            ).execute()
+
+            # Create new topic if new_topic_name is provided
+            if new_topic_name:
+                topic = Topic(name=new_topic_name, course=course)
+                topic.save()
+
+            # Create new course if new_course_name is provided
+            if new_course_name:
+                existing_course = Course.objects.filter(name=new_course_name).exists()
+                if existing_course:
+                    messages.error(request,
+                                   f"This course, {new_course_name} exists already select from the dropdown list")
+                    return redirect('add_material')
+                else:
+                    course = Course(name=new_course_name)
+                    course.save()
+
+            # Check for existing materials with the same name and course/topic combination
+            existing_material = Material.objects.filter(name=name, topic=topic, course=course,
+                                                        description=description).exists()
+            if existing_material:
+                messages.error(request, f"The material, {existing_material} or course exists already")
+                return redirect('home')
             try:
                 # Save the new material
                 material_instance = Material.objects.create(name=name, drive_id=created_file['id'], course=course, topic=topic,

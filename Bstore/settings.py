@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vk0q2j=%@+)1iru&367g3)@(a$=^*t1le@6-3nhe5+nen0j+m3'
+SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -119,14 +119,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR/'static'
+    BASE_DIR / 'static'
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 GOOGLE_CLIENT_SECRETS = {
     "web": {
@@ -173,7 +172,7 @@ SIMPLE_JWT = {
 
 GOOGLE_DRIVE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'bstordrive.json')
 
-GOOGLE_DRIVE_STORAGE_ROOT = '1ZfTSOZBQrNGOdabSxz1-isr0o6kPlbt3'  # Specify the root folder on Google Drive where you want to store files
+GOOGLE_DRIVE_STORAGE_ROOT = os.getenv("GOOGLE_DRIVE_STORAGE_ROOT")  # Specify the root folder on Google Drive where you want to store files
 
 GOOGLE_DRIVE_AUTH_SCOPES = ['https://www.googleapis.com/auth/drive']
 
